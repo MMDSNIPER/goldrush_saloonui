@@ -21,7 +21,7 @@
             <h1 id="shop-name" class="text-5xl font-western text-rdr-brown mb-2 tracking-wider">Loading...</h1>
             <p class="text-2xl text-rdr-red font-western">Freshly Baked Goods & More</p>
             <img id="saloon-logo" src="" alt="Saloon Logo" style="max-height: 100px;">
-            <button onclick="closeMenu()" style="position: absolute; top: 10px; right: 10px;">Close</button>
+            <button onclick="closeMenu()" class="ml-auto text-lg font-bold bg-[#8B4513] px-3 py-1 rounded-full" style="position: absolute; top: 10px; right: 10px;">Close</button>
         </header>
 
         <section class="mb-8">
@@ -55,13 +55,12 @@
             document.getElementById("menu").classList.remove("hidden");
             salonData = event.data.data;
             document.getElementById("shop-name").innerText = salonData.name;
-
+            document.getElementById("saloon-logo").src = salonData.logo;
             document.getElementById("mainmenu").style.backgroundColor = salonData.menuColor; 
             populateCategory("foods", salonData.foods);
             populateCategory("combos", salonData.combos);
             populateCategory("others", salonData.others);
         } else if (event.data.type === "updateUI") {
-            document.getElementById("saloon-logo").src = event.data.logo;
             document.body.style.backgroundColor = event.data.menuColor;
         }
     });
