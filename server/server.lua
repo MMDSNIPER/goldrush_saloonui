@@ -46,6 +46,7 @@
 local salonsData = json.decode(LoadResourceFile(GetCurrentResourceName(), "config.json"))
 
 lib.callback.register('saloon:getSalonData', function(source, saloon)
+    salonsData = json.decode(LoadResourceFile(GetCurrentResourceName(), "config.json"))
     return salonsData.salons[saloon]
 end)
 
@@ -66,5 +67,21 @@ AddEventHandler("saloon:addItem", function(saloonName, category, item)
         table.insert(salonsData.salons[saloonName][category], item)
         SaveResourceFile(GetCurrentResourceName(), "config.json", json.encode(salonsData, { indent = true }), -1)
         TriggerClientEvent("saloon:notifyUpdate", -1, saloonName, category, item)
+    end
+end)
+
+RegisterServerEvent("saloon:removeItem")
+AddEventHandler("saloon:removeItem", function(saloonName, category, itemName)
+    local salonsData = json.decode(LoadResourceFile(GetCurrentResourceName(), "config.json"))
+
+    if salonsData.salons[saloonName] then
+        for i, item in ipairs(salonsData.salons[saloonName][category]) do
+            if item.name == itemName then
+                table.remove(salonsData.salons[saloonName][category], i)
+                SaveResourceFile(GetCurrentResourceName(), "config.json", json.encode(salonsData, { indent = true }), -1)
+                TriggerClientEvent("saloon:notifyUpdate", -1, saloonName, category, itemName, "removed")
+                break
+            end
+        end
     end
 end)
