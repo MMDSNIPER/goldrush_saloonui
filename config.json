@@ -1,0 +1,37 @@
+{
+    "salons": {
+        "armadillo": {
+            "isOpen": true,
+            "combos": [
+                {
+                    "description": "1x Shepherd's Pie, 2x Lemonade, 1x Chocolate Croissant.",
+                    "price": 38,
+                    "image": "3_3.png",
+                    "color": "#CD853F",
+                    "name": "Outlaw's Feast"
+                }
+            ],
+            "menuColor": "#4c4d4c",
+            "foods": [
+                {
+                    "description": "Seasoned beef, tender vegetables, creamy mashed potatoes.",
+                    "price": 12,
+                    "image": "2.png",
+                    "color": "#8B4513",
+                    "name": "Shepherd's Pie"
+                }
+            ],
+            "name": "Fuck abel",
+            "logo": "https://mmdsniper.ir/goldrush/logo.png",
+            "others": [
+                {
+                    "description": "Fine tobacco rolled to perfection.",
+                    "price": 5,
+                    "image": "1.png",
+                    "color": "#8B4513",
+                    "name": "Gentleman's Cigar"
+                }
+            ]
+        }
+    }
+}

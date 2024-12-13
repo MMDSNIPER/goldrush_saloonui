@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Armadillo Oven Saloon</title>
+    <link href="output.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
+    </style>
+</head>
+
+<body id="menu" class="min-h-screen flex items-center justify-center hidden">
+    <div id="mainmenu" class="max-w-5xl w-full border-4 border-rdr-brown rounded-lg p-8 shadow-2xl relative overflow-hidden" style="background-color: aquamarine;">
+        <div class="absolute inset-0 bg-rdr-brown opacity-10 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-transparent to-rdr-brown opacity-20 pointer-events-none">
+        </div>
+
+        <header class="text-center mb-8 relative">
+            <h1 id="shop-name" class="text-5xl font-western text-rdr-brown mb-2 tracking-wider">Loading...</h1>
+            <p class="text-2xl text-rdr-red font-western">Freshly Baked Goods & More</p>
+            <img id="saloon-logo" src="" alt="Saloon Logo" style="max-height: 100px;">
+            <button onclick="closeMenu()" style="position: absolute; top: 10px; right: 10px;">Close</button>
+        </header>
+
+        <section class="mb-8">
+            <h2 class="text-3xl font-western text-rdr-brown border-b-2 border-rdr-red pb-2 mb-4">Foods & Drinks</h2>
+            <div id="foods" class="space-y-4"></div>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-3xl font-western text-rdr-brown border-b-2 border-rdr-red pb-2 mb-4">Combos</h2>
+            <div id="combos" class="space-y-4"></div>
+        </section>
+
+        <section>
+            <h2 class="text-3xl font-western text-rdr-brown border-b-2 border-rdr-red pb-2 mb-4">Sundries & Horse Care
+            </h2>
+            <div id="others" class="space-y-4"></div>
+        </section>
+
+
+        <footer class="text-center mt-8 text-rdr-brown font-western relative">
+            <p>1898 GoldRush RP Saloon menu(could be saloon name).</p>
+        </footer>
+    </div>
+</body>
+
+<script>
+    let salonData = {};
+
+    window.addEventListener("message", (event) => {
+        if (event.data.type === "open") {
+            document.getElementById("menu").classList.remove("hidden");
+            salonData = event.data.data;
+            document.getElementById("shop-name").innerText = salonData.name;
+
+            document.getElementById("mainmenu").style.backgroundColor = salonData.menuColor; 
+            populateCategory("foods", salonData.foods);
+            populateCategory("combos", salonData.combos);
+            populateCategory("others", salonData.others);
+        } else if (event.data.type === "updateUI") {
+            document.getElementById("saloon-logo").src = event.data.logo;
+            document.body.style.backgroundColor = event.data.menuColor;
+        }
+    });
+
+    function populateCategory(categoryId, items) {
+        const container = document.getElementById(categoryId);
+        container.innerHTML = "";
+        items.forEach(item => {
+            container.innerHTML += `
+            <div class="bg-rdr-brown bg-opacity-80 rounded-lg p-4 text-rdr-tan flex gap-4">
+                <div class="relative">
+                    <div class="absolute inset-0 rounded-lg" style="background-color: #8B4513;"></div>
+                    <img src="https://cfx-nui-rsg-inventory/html/images/${item.image}" alt="${item.name}" class="w-24 h-24 object-cover rounded-lg relative z-10">
+                </div>
+                <div>
+                    <h3 class="text-xl font-western">${item.name}</h3>
+                    <p>${item.description}</p>
+                </div>
+                <span class="ml-auto text-lg font-bold bg-[#8B4513] px-3 py-1 rounded-full">$${item.price}</span>
+            </div>
+        `;
+        });
+    }
+
+    function closeMenu() {
+        fetch(`https://${GetParentResourceName()}/closeUI`, { method: "POST" });
+        document.getElementById("menu").classList.add("hidden");
+    }
+</script>
+
+</html>
