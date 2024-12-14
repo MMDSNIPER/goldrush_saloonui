@@ -35,14 +35,23 @@
             border-radius: 10px;
             padding: 20px;
             background-color: var(--primary-color);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
         }
 
         .header {
             text-align: center;
         }
 
+        .header h1 {
+            font-family: 'Rye', cursive;
+            color: var(--secondary-color);
+            margin: 0;
+        }
+
         .header img {
             max-width: 80px;
+            height: auto;
             margin: 10px 0;
         }
 
@@ -50,17 +59,18 @@
             font-family: 'Rye', cursive;
             font-size: 1.5rem;
             color: var(--secondary-color);
+            margin: 20px 0 10px;
             border-bottom: 2px solid var(--accent-color);
             padding-bottom: 5px;
-            margin-top: 20px;
         }
 
         .item {
             display: flex;
             align-items: center;
+            background-color: rgba(0, 0, 0, 0.1);
             margin: 10px 0;
             border-radius: 10px;
-            padding: 10px;
+            overflow: hidden;
             position: relative;
         }
 
@@ -68,7 +78,12 @@
             width: 80px;
             height: 80px;
             object-fit: cover;
-            margin-right: 10px;
+            border-radius: 5px;
+        }
+
+        .item-content {
+            padding: 10px;
+            flex-grow: 1;
         }
 
         .item-content h3 {
@@ -81,9 +96,10 @@
             color: white;
             font-weight: bold;
             padding: 5px 10px;
-            border-radius: 5px;
+            border-radius: 0 0 0 10px;
             position: absolute;
-            right: 10px;
+            top: 0;
+            right: 0;
         }
 
         .close-btn {
@@ -91,7 +107,7 @@
             top: 10px;
             right: 10px;
             background-color: var(--accent-color);
-            color: white;
+            color: #fff;
             font-size: 1.2rem;
             border: none;
             padding: 5px 10px;
@@ -105,7 +121,7 @@
         <button class="close-btn" onclick="closeMenu()">X</button>
 
         <div class="header">
-            <img id="saloon-logo" src="" alt="Logo">
+            <img id="saloon-logo" src="https://via.placeholder.com/80" alt="Logo">
             <h1 id="shop-name">Saloon</h1>
         </div>
 
