@@ -7,142 +7,103 @@ RegisterCommand('managesaloon', function()
         options = {
             {
                 title = 'Edit information',
-                description = 'edit saloon name, colors, logo and...',
+                description = 'Edit saloon details',
                 icon = 'info',
                 onSelect = function()
                     lib.callback('saloon:getSalonData', false, function(salonData)
                         local input = lib.inputDialog('Edit Details', {
-                            { type = 'input',    label = 'New Name',          description = 'Enter a new name for the saloon', default = salonData.name or '', required = false },
-                            { type = 'input',    label = 'Logo URL',          description = 'Update the saloon logo',          default = salonData.logo or '', required = false },
-                            { type = 'color',    label = 'Custom Menu Color', default = salonData.menuColor or '#D2B48C' },
-                            { type = 'checkbox', label = 'Toggle Open/Close', checked = salonData.isOpen },
+                            { type = 'input',    label = 'Name',              default = salonData.name or '',                 required = true },
+                            { type = 'input',    label = 'Info',              default = salonData.info or '',                 required = true },
+                            { type = 'input',    label = 'Logo URL',          default = salonData.logo or '',                 required = true },
+                            { type = 'color',    label = 'Background Color',  default = salonData.bgColor or '#1A0D00' },
+                            { type = 'color',    label = 'Primary Color',     default = salonData.primaryColor or '#3C2A21' },
+                            { type = 'color',    label = 'Secondary Color',   default = salonData.secondaryColor or '#D2B48C' },
+                            { type = 'color',    label = 'Accent Color',      default = salonData.accentColor or '#8B0000' },
+                            { type = 'color',    label = 'Highlight Color',   default = salonData.highlightColor or '#FFD700' },
+                            { type = 'checkbox', label = 'Toggle Open/Close', checked = salonData.isOpen }
                         })
 
                         if input then
-                            local newName = input[1]
-                            local logourl = input[2]
-                            local newColor = input[3]
-                            local toggleclose = input[4]
-
-                            if newName and newName ~= "" then
-                                TriggerServerEvent("saloon:updateSalon", saloonName, "name", newName)
-                            end
-                            if newColor then
-                                TriggerServerEvent("saloon:updateSalon", saloonName, "menuColor", newColor)
-                            end
-                            if toggleclose ~= nil then
-                                TriggerServerEvent("saloon:updateSalon", saloonName, "isOpen", toggleclose)
-                            end
-                            if logourl then
-                                TriggerServerEvent("saloon:updateSalon", saloonName, "logo", logourl)
-                            end
+                            TriggerServerEvent("saloon:updateSalon", saloonName, {
+                                name = input[1],
+                                info = input[2],
+                                logo = input[3],
+                                bgColor = input[4],
+                                primaryColor = input[5],
+                                secondaryColor = input[6],
+                                accentColor = input[7],
+                                highlightColor = input[8],
+                                isOpen = input[9]
+                            })
                         end
                     end, saloonName)
                 end,
             },
             {
                 title = 'Add item',
-                description = 'add item to saloon',
+                description = 'Add a new item to the saloon menu',
                 icon = 'plus',
                 onSelect = function()
-                    local newinput = lib.inputDialog('Add new item', {
-                        { type = 'input', label = 'Add New Item Name',        description = 'Enter the name of the new item',        required = false },
-                        { type = 'input', label = 'Add New Item Price',       description = 'Enter the price of the new item',       required = false },
-                        { type = 'input', label = 'Add New Item Description', description = 'Enter the description of the new item', required = false },
-                        { type = 'input', label = 'Add New Item Image',       description = 'Enter the image URL of the new item',   required = false },
+                    local input = lib.inputDialog('Add New Item', {
+                        { type = 'input',  label = 'Item Name',        required = true },
+                        { type = 'number', label = 'Item Price',       required = true },
+                        { type = 'input',  label = 'Item Description', required = true },
+                        { type = 'input',  label = 'Image URL',        required = true },
                         {
                             type = 'select',
-                            label = 'Select Category',
-                            description = 'Choose the category for the new item',
+                            label = 'Category',
                             options = {
-                                { label = 'foods',  value = 'foods' },
-                                { label = 'combos', value = 'combos' },
-                                { label = 'others', value = 'others' }
+                                { label = 'Foods',  value = 'foods' },
+                                { label = 'Combos', value = 'combos' },
+                                { label = 'Others', value = 'others' }
                             }
                         },
                     })
-                    if newinput then
-                        local newItemName = newinput[1]
-                        local newItemPrice = tonumber(newinput[2]) -- تبدیل به عدد
-                        local newItemDescription = newinput[3]
-                        local newItemImage = newinput[4]
-                        local selectedCategory = newinput[5]
-                        -- افزودن آیتم جدید به سالون
-                        if newItemName and newItemPrice and newItemDescription and newItemImage and selectedCategory then
-                            local newItem = {
-                                name = newItemName,
-                                price = newItemPrice,
-                                description = newItemDescription,
-                                image = newItemImage,
-                                color = selectedCategory == "foods" and "#8B4513" or
-                                    (selectedCategory == "combos" and "#CD853F" or "#8B4513")
-                            }
-
-                            TriggerServerEvent("saloon:addItem", saloonName, selectedCategory, newItem)
-                        end
+                    if input then
+                        local newItem = {
+                            name = input[1],
+                            price = input[2],
+                            description = input[3],
+                            image = input[4],
+                            category = input[5],
+                        }
+                        TriggerServerEvent("saloon:addItem", saloonName, input[5], newItem)
                     end
                 end,
             },
             {
                 title = 'Remove item',
-                description = 'remove item from saloon menu!',
+                description = 'Remove an item from the saloon',
                 menu = 'remove_menu',
                 icon = 'trash'
             },
         }
     })
+
+    local function buildRemoveMenu(categoryName, items)
+        local menu = {}
+        menu[#menu + 1] = { title = categoryName, disabled = true }
+        for _, item in ipairs(items) do
+            menu[#menu + 1] = {
+                title = item.name,
+                description = 'Click to remove',
+                event = 'removeitemfromsaloon',
+                args = { name = item.name, category = categoryName, saloonName = saloonName }
+            }
+        end
+        return menu
+    end
+
     local itemlist = {}
-    itemlist[#itemlist + 1] = {
-        title = "Foods & Drinks",
-        disabled = true,
-    }
-    for index, value in ipairs(saloonData.foods) do
-        itemlist[#itemlist + 1] = {
-            title = value.name,
-            description = 'foods',
-            event = 'removeitemfromsaloon',
-            args = {
-                name = value.name,
-                category = 'foods',
-                saloonName = saloonName
-            }
-        }
+    for _, cat in ipairs({ "foods", "combos", "others" }) do
+        for _, item in ipairs(buildRemoveMenu(cat, saloonData[cat])) do
+            table.insert(itemlist, item)
+        end
     end
-    itemlist[#itemlist + 1] = {
-        title = "Combos",
-        disabled = true
-    }
-    for index, value in ipairs(saloonData.combos) do
-        itemlist[#itemlist + 1] = {
-            title = value.name,
-            description = 'combos',
-            event = 'removeitemfromsaloon',
-            args = {
-                name = value.name,
-                category = 'foods',
-                saloonName = saloonName
-            }
-        }
-    end
-    itemlist[#itemlist + 1] = {
-        title = "Others",
-        disabled = true
-    }
-    for index, value in ipairs(saloonData.others) do
-        itemlist[#itemlist + 1] = {
-            title = value.name,
-            description = 'others',
-            event = 'removeitemfromsaloon',
-            args = {
-                name = value.name,
-                category = 'foods',
-                saloonName = saloonName
-            }
-        }
-    end
+
     lib.registerContext({
         id = 'remove_menu',
-        title = 'List of items to remove',
+        title = 'Remove Items',
         menu = 'saloon_management',
         options = itemlist,
     })

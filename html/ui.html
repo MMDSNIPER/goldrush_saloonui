@@ -1,133 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Saloon Menu</title>
+    <title>Saloon Menu</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
 
         :root {
-            --primary-color: #D2B48C;
-            --secondary-color: #8B4513;
-            --accent-color: #CD853F;
+            --color-bg: #1A0D00;
+            --color-primary: #3C2A21;
+            --color-secondary: #D2B48C;
+            --color-accent: #8B0000;
+            --color-highlight: #FFD700;
         }
 
         body {
+            font-family: Arial, sans-serif;
+            color: var(--color-secondary);
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            color: var(--secondary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
-        .hidden {
-            display: none;
-        }
-
-        .menu-container {
+        .container {
+            max-width: 1920px;
             width: 90%;
-            max-width: 1024px;
-            border: 4px solid var(--secondary-color);
-            border-radius: 10px;
-            padding: 20px;
-            background-color: var(--primary-color);
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-            position: relative;
+            height: 100%;
+            background-color: var(--color-bg);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .container.hidden {
+            transform: translateY(10px);
+            opacity: 0;
+        }
+
+        .container:not(.hidden) {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .western-font {
+            font-family: 'Rye', cursive;
+        }
+
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .header {
             text-align: center;
+            margin-bottom: 3rem;
         }
 
-        .header h1 {
-            font-family: 'Rye', cursive;
-            color: var(--secondary-color);
-            margin: 0;
+        .main-title {
+            font-size: 3rem;
+            color: var(--color-highlight);
+            margin-bottom: 0.5rem;
         }
 
-        .header img {
-            max-width: 80px;
-            height: auto;
-            margin: 10px 0;
-        }
-
-        .category {
-            font-family: 'Rye', cursive;
+        .subtitle {
             font-size: 1.5rem;
-            color: var(--secondary-color);
-            margin: 20px 0 10px;
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 5px;
+            color: var(--color-accent);
         }
 
-        .item {
-            display: flex;
-            align-items: center;
-            background-color: rgba(0, 0, 0, 0.1);
-            margin: 10px 0;
-            border-radius: 10px;
-            overflow: hidden;
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .menu-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .menu-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        .menu-section-title {
+            font-size: 1.875rem;
+            color: var(--color-highlight);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--color-accent);
+            padding-bottom: 0.5rem;
+        }
+
+        .menu-item {
+            background-color: var(--color-primary);
+            /* opacity: 0.7; */
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
             position: relative;
+            overflow: hidden;
         }
 
-        .item img {
-            width: 80px;
-            height: 80px;
+        .menu-item-content {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .menu-item-image {
+            width: 6rem;
+            height: 6rem;
             object-fit: cover;
-            border-radius: 5px;
+            border-radius: 0.5rem;
         }
 
-        .item-content {
-            padding: 10px;
+        .menu-item-details {
             flex-grow: 1;
         }
 
-        .item-content h3 {
-            font-family: 'Rye', cursive;
-            margin: 0 0 5px;
+        .menu-item-title {
+            font-size: 1.25rem;
+            color: var(--color-highlight);
+            margin-bottom: 0.5rem;
         }
 
-        .price {
-            background-color: var(--accent-color);
-            color: white;
-            font-weight: bold;
-            padding: 5px 10px;
-            border-radius: 0 0 0 10px;
+        .menu-item-description {
+            font-size: 0.875rem;
+        }
+
+        .menu-item-price {
             position: absolute;
             top: 0;
             right: 0;
+            background-color: var(--color-highlight);
+            color: var(--color-primary);
+            padding: 0.25rem 0.75rem;
+            border-bottom-left-radius: 0.5rem;
+            font-weight: bold;
         }
+
 
         .close-btn {
             position: absolute;
             top: 10px;
             right: 10px;
-            background-color: var(--accent-color);
+            background-color: var(--color-accent);
             color: #fff;
             font-size: 1.2rem;
             border: none;
             padding: 5px 10px;
             cursor: pointer;
-            border-radius: 50%;
+            border-radius: 20%;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background-color: var(--color-highlight);
+            color: var(--color-primary);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--color-highlight);
         }
     </style>
 </head>
-<body>
-    <div id="menu" class="menu-container hidden">
-        <button class="close-btn" onclick="closeMenu()">X</button>
 
-        <div class="header">
-            <img id="saloon-logo" src="https://via.placeholder.com/80" alt="Logo">
-            <h1 id="shop-name">Saloon</h1>
+<body>
+    <div id="menu" class="container hidden">
+        <button class="close-btn" onclick="closeMenu()">X</button>
+        <header class="header">
+            <!-- <img id="saloon-logo" src="https://via.placeholder.com/80" alt="Logo"> -->
+            <h1 id="shop-name" class="main-title western-font text-shadow">Loading...</h1>
+            <p id="shop-info" class="subtitle western-font text-shadow"></p>
+        </header>
+
+        <div class="menu-grid">
+            <div>
+                <h2 class="menu-section-title western-font text-shadow">Foods & Drinks</h2>
+                <div id="foods"></div>
+            </div>
+
+            <div>
+                <h2 class="menu-section-title western-font text-shadow">Combos</h2>
+                <div id="combos"></div>
+            </div>
+
+            <div>
+                <h2 class="menu-section-title western-font text-shadow">Sundries & Horse Care</h2>
+                <div id="others"></div>
+            </div>
         </div>
 
-        <div id="foods"></div>
-        <div id="combos"></div>
-        <div id="others"></div>
+        <footer class="footer">
+            <p class="western-font text-shadow">1899 GoldRush RP</p>
+        </footer>
     </div>
 
     <script>
@@ -139,56 +216,43 @@
 
                 salonData = event.data.data;
 
-                document.documentElement.style.setProperty('--primary-color', salonData.primaryColor || '#D2B48C');
-                document.documentElement.style.setProperty('--secondary-color', salonData.secondaryColor || '#8B4513');
-                document.documentElement.style.setProperty('--accent-color', salonData.accentColor || '#CD853F');
-
+                updateColors({
+                    bg: salonData.bgColor,
+                    primary: salonData.primaryColor,
+                    secondary: salonData.secondaryColor,
+                    accent: salonData.accentColor,
+                    highlight: salonData.highlightColor
+                });
                 document.getElementById("shop-name").innerText = salonData.name;
-                document.getElementById("saloon-logo").src = salonData.logo;
+                document.getElementById("shop-info").innerText = salonData.info;
+                // document.getElementById("saloon-logo").src = salonData.logo;
 
                 populateCategory("foods", salonData.foods);
-                populateCombos("combos", salonData.combos);
+                populateCategory("combos", salonData.combos);
                 populateCategory("others", salonData.others);
             }
         });
 
-        function populateCategory(categoryId, items) {
-            const container = document.getElementById(categoryId);
-            container.innerHTML = `<div class="category">${categoryId.toUpperCase()}</div>`;
-
-            items.forEach(item => {
-                const textColor = getTextColor(item.color || '#FFFFFF');
-                container.innerHTML += `
-                    <div class="item" style="background-color: ${item.color || '#FFFFFF'}; color: ${textColor}">
-                        <img src="https://cfx-nui-rsg-inventory/html/images/${item.image}" alt="${item.name}">
-                        <div class="item-content">
-                            <h3>${item.name}</h3>
-                            <p>${item.description}</p>
+        function createMenuItem(item) {
+            const imageUrl = item.image.startsWith("http") ? item.image : `https://cfx-nui-rsg-inventory/html/images/${item.image}`;
+            return `
+                <div class="menu-item">
+                    <div class="menu-item-content">
+                        <img src="${imageUrl}" style="background-color: ${item.color};" alt="${item.name}" class="menu-item-image">
+                        <div class="menu-item-details">
+                            <h3 class="menu-item-title western-font text-shadow">${item.name}</h3>
+                            <p class="menu-item-description">${item.description}</p>
                         </div>
-                        <div class="price">$${item.price}</div>
                     </div>
-                `;
-            });
+                    <div class="menu-item-price">$${item.price}</div>
+                </div>
+            `;
         }
 
-        function populateCombos(categoryId, items) {
+        function populateCategory(categoryId, items) {
             const container = document.getElementById(categoryId);
-            container.innerHTML = `<div class="category">${categoryId.toUpperCase()}</div>`;
-
-            items.forEach(item => {
-                const imageUrl = item.image.startsWith("http") ? item.image : `https://cfx-nui-rsg-inventory/html/images/${item.image}`;
-                const textColor = getTextColor(item.color || '#FFFFFF');
-                container.innerHTML += `
-                    <div class="item" style="background-color: ${item.color || '#FFFFFF'}; color: ${textColor}">
-                        ${imageUrl ? `<img src="${imageUrl}" alt="${item.name}">` : ""}
-                        <div class="item-content">
-                            <h3>${item.name}</h3>
-                            <p>${item.description}</p>
-                        </div>
-                        <div class="price">$${item.price}</div>
-                    </div>
-                `;
-            });
+            container.innerHTML = ``;
+            container.innerHTML += items.map(createMenuItem).join('');
         }
 
         function getTextColor(bgColor) {
@@ -201,10 +265,18 @@
             return brightness > 128 ? '#000000' : '#FFFFFF';
         }
 
+        function updateColors(colors) {
+            const root = document.documentElement;
+            Object.entries(colors).forEach(([key, value]) => {
+                root.style.setProperty(`--color-${key}`, value);
+            });
+        }
+
         function closeMenu() {
             fetch(`https://${GetParentResourceName()}/closeUI`, { method: "POST" });
             document.getElementById("menu").classList.add("hidden");
         }
     </script>
 </body>
+
 </html>

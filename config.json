@@ -1,35 +1,40 @@
 {
     "salons": {
         "armadillo": {
+            "accentColor": "#8B0000",
+            "primaryColor": "#3C2A21",
+            "name": "sniper salon",
+            "bgColor": "#1a0d00cb",
             "isOpen": true,
+            "logo": "https://mmdsniper.ir/goldrushrp/logo.png",
             "combos": [
                 {
+                    "image": "https://mmdsniper.ir/goldrushrp/1_1.png",
+                    "name": "Outlaw's Feast",
                     "description": "1x Shepherd's Pie, 2x Lemonade, 1x Chocolate Croissant.",
-                    "price": 38,
-                    "image": "3_3.png",
-                    "color": "#CD853F",
-                    "name": "Outlaw's Feast"
+                    "color": "#8b0000",
+                    "price": 38
                 }
             ],
-            "menuColor": "#4c4d4c",
+            "highlightColor": "#FFD700",
+            "secondaryColor": "#D2B48C",
             "foods": [
                 {
-                    "description": "Seasoned beef, tender vegetables, creamy mashed potatoes.",
-                    "price": 12,
-                    "image": "2.png",
+                    "image": "carrot.png",
+                    "name": "mamad",
+                    "description": "msmasdma",
                     "color": "#8B4513",
-                    "name": "Shepherd's Pie"
+                    "price": 12
                 }
             ],
-            "name": "Fuck abel",
-            "logo": "https://mmdsniper.ir/goldrush/logo.png",
+            "info": "Grub, Grog, and Goods for the Discerning Cowpoke",
             "others": [
                 {
+                    "image": "apple.png",
+                    "name": "Gentleman's Cigar",
                     "description": "Fine tobacco rolled to perfection.",
-                    "price": 5,
-                    "image": "1.png",
-                    "color": "#8B4513",
-                    "name": "Gentleman's Cigar"
+                    "color": "#3c2a21",
+                    "price": 5
                 }
             ]
         }

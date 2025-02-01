@@ -51,12 +51,33 @@ lib.callback.register('saloon:getSalonData', function(source, saloon)
 end)
 
 RegisterServerEvent("saloon:updateSalon")
-AddEventHandler("saloon:updateSalon", function(saloonName, key, value)
-    if salonsData.salons[saloonName] then
-        salonsData.salons[saloonName][key] = value
-        SaveResourceFile(GetCurrentResourceName(), "config.json", json.encode(salonsData, {indent = true}), -1)
-        TriggerClientEvent("saloon:notifyUpdate", -1, saloonName, key, value)
+AddEventHandler("saloon:updateSalon", function(saloonName, updates)
+    local src = source
+    if not salonsData.salons[saloonName] then
+        print(("Attempt to update non-existent saloon '%s' by player %s"):format(saloonName, src))
+        return
     end
+
+    local updatedKeys = {}
+    for key, value in pairs(updates) do
+        salonsData.salons[saloonName][key] = value
+        table.insert(updatedKeys, key)
+    end
+
+    local success, err = pcall(function()
+        SaveResourceFile(GetCurrentResourceName(), "config.json", json.encode(salonsData, { indent = true }), -1)
+    end)
+
+    if not success then
+        print(("Error saving saloon data: %s"):format(err))
+        return
+    end
+
+    for _, key in ipairs(updatedKeys) do
+        TriggerClientEvent("saloon:notifyUpdate", -1, saloonName, key, salonsData.salons[saloonName][key])
+    end
+
+    print(("Saloon '%s' updated successfully by player %s"):format(saloonName, src))
 end)
 
 RegisterServerEvent("saloon:addItem")
